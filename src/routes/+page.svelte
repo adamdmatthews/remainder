@@ -1,9 +1,12 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { format } from 'date-fns/format';
+    import { addHours, addMinutes, roundToNearestMinutes } from 'date-fns';
+    import Deadlinepicker from "$lib/deadlinepicker.svelte";
+    import Clock from "$lib/clock.svelte";
+    import Countdown from "$lib/countdown.svelte";
 
     let date = new Date();
-    $: formatted_time = format(date, 'HH:mm:ss');
+    let deadline = roundToNearestMinutes(addHours(new Date(), 1), { nearestTo: 5 });
 
     onMount(() => {
         const interval = setInterval(() => {
@@ -11,6 +14,12 @@
         }, 100);
         return () => clearInterval(interval);
     })
+
+    function addToDeadline(mins: number) {
+        deadline = addMinutes(deadline, mins);
+    }
 </script>
 
-<h1>{formatted_time}</h1>
+<Clock date={date} />
+<Deadlinepicker deadline={deadline} on:update={(e) => addToDeadline(e.detail)} />
+<Countdown date={date} deadline={deadline} />
