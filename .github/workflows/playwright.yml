@@ -1,0 +1,12 @@
+name: Playwright Tests
+on: [ push ]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - run: npm install --global yarn
+      - run: yarn install
+      - run: yarn playwright install
+      - run: yarn test
