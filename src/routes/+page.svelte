@@ -20,6 +20,10 @@
     }
 </script>
 
-<Clock date={date} />
-<Deadlinepicker deadline={deadline} on:update={(e) => addToDeadline(e.detail)} />
-<Countdown date={date} deadline={deadline} />
+<div class="h-screen flex items-center justify-center text-center">
+    <div>
+        <Clock date={date} />
+        <Deadlinepicker deadline={deadline} on:update={(e) => addToDeadline(e.detail)} />
+        <Countdown date={date} deadline={deadline} />
+    </div>
+</div>
