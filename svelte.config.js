@@ -17,7 +17,9 @@ const config = {
 				'default-src': ['none'],
 				'img-src': ['self' ],
 				'script-src': ['self' ],
-				'style-src': ['self' ]
+				// i can't work out how to get inline styles working properly
+				// i'd rather avoid all unsafe things in here
+				'style-src': ['self', 'unsafe-inline' ] 
 			}
 		}
 	},

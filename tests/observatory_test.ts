@@ -11,4 +11,14 @@ test("has security policy header", async ({ page }) => {
     const headers = response!.headers()!;
     expect(headers["content-security-policy"]).toContain("default-src 'none'");
 })
-    
+
+test("no console errors", async ({ page }) => {
+    let errors: string[] = [];
+    page.on("console", (msg) => {
+        if (msg.type() === "error") {
+            errors.push(msg.text());
+        }
+    });
+    await page.goto("/");
+    expect(errors).toEqual([]);
+})
