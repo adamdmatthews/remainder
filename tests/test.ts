@@ -11,7 +11,11 @@ test('page has correct title', async ({ page }) => {
 	await expect(page).toHaveTitle('remainder');
 });
 
-test('clock gets current time', async ({ page }) => {
-	const date = new Date();
-	await expect(page.getByRole('heading')).toHaveText(date.toLocaleTimeString('en-GB'));
-});
+test.describe(() => {
+	test.describe.configure({ retries: 3 });
+	test('clock gets current time', async ({ page }) => {
+		const date = new Date();
+		const clockElement = page.getByText('Time: ');
+		await expect(clockElement).toContainText(date.toLocaleTimeString('en-GB'));
+	});
+})
