@@ -10,8 +10,8 @@
     }
 </script>
 
-<div style='display: flex'>
+<div class='flex items-center'>
+    <button class="btn m-2" on:click={() => updateDeadline(-5)}>-5</button>
     <h2>Deadline: {format(deadline, 'HH:mm:ss')}</h2>
-    <button on:click={() => updateDeadline(-5)}>-5</button>
-    <button on:click={() => updateDeadline(5)}>+5</button>
+    <button class="btn m-2" on:click={() => updateDeadline(5)}>+5</button>
 </div>
