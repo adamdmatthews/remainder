@@ -19,4 +19,4 @@
     }
 </script>
 
-<h2>Time remaining: {timeRemaining}</h2>
+{timeRemaining}
