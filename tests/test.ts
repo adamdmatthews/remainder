@@ -49,8 +49,11 @@ async function getCountdownInSeconds(page: Page) {
 
 test('coundown plus current time is deadline', async ({ page }) => {
 	const timeInSeconds = await getTimeInSeconds(page);
-	const deadlineInSeconds = await getDeadlineInSeconds(page);
 	const countdownInSeconds = await getCountdownInSeconds(page);
+	// check if it's near midnight
+	const deadlineInSeconds = timeInSeconds + countdownInSeconds < hoursToSeconds(24)
+		? await getDeadlineInSeconds(page)
+		: await getDeadlineInSeconds(page) + hoursToSeconds(24);
 	expect(timeInSeconds + countdownInSeconds).toEqual(deadlineInSeconds);
 })
 
