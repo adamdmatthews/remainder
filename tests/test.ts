@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { hoursToSeconds, minutesToSeconds } from 'date-fns';
+import { addDays, format, hoursToSeconds, minutesToSeconds } from 'date-fns';
 
 // I'd like a cleaner way to handle time in tests
 // but I guess this is good enough for now, flaky tests can just be rerun
@@ -36,8 +36,8 @@ async function getTimeInSeconds(page: Page) {
 }
 
 async function getDeadlineInSeconds(page: Page) {
-	const deadlineRegex = /Deadline: (?<hours>\d{2}):(?<minutes>\d{2}):(?<seconds>\d{2})/;
-	const deadline = await page.getByText('Deadline: ').textContent();
+	const deadlineRegex = /(?<hours>\d{2}):(?<minutes>\d{2}):(?<seconds>\d{2})/;
+	const deadline = await page.locator('input').inputValue();
 	return getSeconds(deadlineRegex, deadline!);
 }
 
@@ -45,6 +45,18 @@ async function getCountdownInSeconds(page: Page) {
 	const countdownRegex = /Time remaining: (?<hours>\d{1,2})h (?<minutes>\d{1,2})m (?<seconds>\d{1,2})s/;
 	const countdown = await page.getByText('Time remaining: ').textContent();
 	return getSeconds(countdownRegex, countdown!);
+}
+
+async function setDeadlineValue(page: Page, value: string) {
+	const input = page.locator('input');
+	await input.focus();
+	await input.fill(value);
+	await page.getByText('Time:').click(); // Click off the box (there must be a better way)
+}
+
+async function setDeadline(page: Page, date: Date) {
+	const value = format(date, 'yyyy/MM/dd HH:mm:ss');
+	setDeadlineValue(page, value);
 }
 
 test('coundown plus current time is deadline', async ({ page }) => {
@@ -80,19 +92,21 @@ test('minus button decrements deadline', async ({ page }) => {
 })
 
 test('reports missed deadline', async ({ page }) => {
-	const decrementButton = page.getByText('-5');
-	for (let i = 0; i < 13; i++) {
-		await decrementButton.click();
-	}
+	const newDeadline = addDays(new Date(), -2);
+	await setDeadline(page, newDeadline);
 	await expect(page.getByText('Time remaining')).toContainText('Deadline passed');
 })
 
 test('reports deadline over a day', async ({ page }) => {
-	const incrementButton = page.getByText('+5');
-	for (let i = 0; i < 280; i++) {
-		await incrementButton.click();
-	}
+	const newDeadline = addDays(new Date(), 2);
+	await setDeadline(page, newDeadline);
 	await expect(page.getByText('Time remaining')).toContainText('Over a day');
+})
+
+test('reports invalid deadline', async ({ page }) => {
+	await expect(page.getByText('Deadline must be yyyy/MM/dd HH:mm:ss')).not.toBeAttached()
+	await setDeadlineValue(page, 'invalid');
+	await expect(page.getByText('Deadline must be yyyy/MM/dd HH:mm:ss')).toBeAttached()
 })
 
 function getTaskRows(page: Page) {
