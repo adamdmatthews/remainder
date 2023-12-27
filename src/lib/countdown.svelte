@@ -1,20 +1,19 @@
 <script lang="ts">
-    import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds, hoursToMinutes, hoursToSeconds, minutesToSeconds } from "date-fns";
+    import { hoursToMilliseconds, hoursToMinutes, hoursToSeconds, millisecondsToHours, millisecondsToMinutes, millisecondsToSeconds, minutesToSeconds, secondsToHours, secondsToMinutes } from "date-fns";
 
-    export let date: Date;
-    export let deadline: Date;
+    export let milliseconds: number;
 
-    $: timeRemaining = formatTimeRemaining(date, deadline);
-    function formatTimeRemaining(date: Date, deadline: Date) {
-        if (date > deadline) {
+    $: timeRemaining = formatTimeRemaining(milliseconds);
+    function formatTimeRemaining(milliseconds: number) {
+        if (milliseconds < 0) {
             return 'Deadline passed';
         }
-        if (differenceInDays(deadline, date) > 0) {
+        if (milliseconds > hoursToMilliseconds(24)) {
             return 'Over a day';
         }
-        const hours = differenceInHours(deadline, date, { roundingMethod: 'floor' });
-        const minutes = differenceInMinutes(deadline, date, { roundingMethod: 'floor' }) - hoursToMinutes(hours);
-        const seconds = differenceInSeconds(deadline, date, { roundingMethod: 'floor' }) - hoursToSeconds(hours) - minutesToSeconds(minutes) + 1;
+        const hours = millisecondsToHours(milliseconds);
+        const minutes = millisecondsToMinutes(milliseconds) - hoursToMinutes(hours);
+        const seconds = millisecondsToSeconds(milliseconds) - hoursToSeconds(hours) - minutesToSeconds(minutes);
         return `${hours}h ${minutes}m ${seconds}s`;
     }
 </script>

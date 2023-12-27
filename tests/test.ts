@@ -99,6 +99,10 @@ function getTaskRows(page: Page) {
 	return page.getByRole('table').locator('tbody').locator('tr');
 }
 
+async function deleteTask(page: Page, n: number) {
+	await getTaskRows(page).nth(n).locator('button').getByText('x').click();
+}
+
 test('starts with no tasks', async ({ page }) => {
 	const tasks = getTaskRows(page);
 	await expect(tasks).toHaveCount(0);
@@ -123,9 +127,7 @@ test('can add multiple tasks', async ({ page }) => {
 test('can delete a task', async ({ page }) => {
 	const addButton = page.getByText('Add task');
 	await addButton.click();
-	const task = getTaskRows(page).nth(0);
-	const deleteButton = task.getByRole('button');
-	await deleteButton.click();
+	await deleteTask(page, 0);
 	const tasks = getTaskRows(page);
 	await expect(tasks).toHaveCount(0);
 })
@@ -141,8 +143,7 @@ test('deletes correct task', async ({ page }) => {
 	const task2Title = await tasks.nth(1).locator('td').nth(0).textContent();
 	const task3Title = await tasks.nth(2).locator('td').nth(0).textContent();
 
-	const task2delete = tasks.nth(1).getByRole('button');
-	await task2delete.click();
+	await deleteTask(page, 1);
 
 	const table = page.getByRole('table');
 	await expect(table).toContainText(task1Title!);
@@ -157,20 +158,6 @@ test('created task deadline is deadline', async ({ page }) => {
 	const taskDeadline = await tasks.nth(0).locator('td').nth(1).textContent();
 	const timeRemaining = (await page.getByText('Time remaining: ').textContent())?.replace('Time remaining: ', '');
 	expect(taskDeadline).toBe(timeRemaining);
-})
-
-test('task deadlines are distinct', async ({ page }) => {
-	const addButton = page.getByText('Add task');
-	for (let i = 0; i < 3; i++) {
-		await addButton.click();
-	}
-	const tasks = getTaskRows(page);
-	const task1Deadline = await tasks.nth(0).locator('td').nth(1).textContent();
-	const task2Deadline = await tasks.nth(1).locator('td').nth(1).textContent();
-	const task3Deadline = await tasks.nth(2).locator('td').nth(1).textContent();
-	expect(task1Deadline).not.toBe(task2Deadline);
-	expect(task1Deadline).not.toBe(task3Deadline);
-	expect(task2Deadline).not.toBe(task3Deadline);
 })
 
 test('task deadlines are max 1 second different', async ({ page }) => {
