@@ -19,10 +19,6 @@
         return () => clearInterval(interval);
     })
 
-    function addToDeadline(mins: number) {
-        deadline = addMinutes(deadline, mins);
-    }
-
     function addTask(task: Task) {
         tasks = [...tasks, task];
     }
@@ -53,7 +49,7 @@
     <div class="grow flex items-center justify-center text-center shadow-lg">
         <div>
             <Clock date={date} />
-            <Deadlinepicker deadline={deadline} on:update={(e) => addToDeadline(e.detail)} />
+            <Deadlinepicker deadline={deadline} on:update={(e) => deadline = e.detail} />
             <h2>Time remaining: <Countdown date={date} deadline={deadline} /></h2>
         </div>
     </div>
