@@ -328,10 +328,10 @@
   resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.9.1.tgz#d146db7a5949e10837b323ce933ed882ac878262"
   integrity sha512-PyJsSsafjmIhVgaI1Zdj7m8BB8mMckFah/xbpplObyHfiXzKcI5UOUXRyOdHW7nz4DpMCuzLnF7v5IWHenCwYA==
 
-"@sveltejs/adapter-node@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@sveltejs/adapter-node/-/adapter-node-2.0.2.tgz#c26ddd909005a9558daee8066f55a26cd6bd85f0"
-  integrity sha512-iboANjLIB7Af74+og5IEQVSPsIfaO+o9zldU/7ljCGCrBj0t2gQlINtuwUhjvwhLgw9vHgICYWWZFxLM2C0zrg==
+"@sveltejs/adapter-node@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@sveltejs/adapter-node/-/adapter-node-2.1.2.tgz#8b6738f3225dbb480eef9e55dacfe3d20cb30653"
+  integrity sha512-ZfVY5buBclWHoBT+RbkMUViJGEIZ3IfT/0Hvhlgp+qC3LRZwp+wS1Zsw5dgkB2sFDZXctbLNXJtwlkjSp1mw0g==
   dependencies:
     "@rollup/plugin-commonjs" "^25.0.7"
     "@rollup/plugin-json" "^6.1.0"
